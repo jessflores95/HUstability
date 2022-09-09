@@ -90,5 +90,5 @@ def coeff_var(mu, sigma):
       
 def fit_gauss(data_list):
     (mu, sigma) = norm.fit(data_list)
-    FWHM = 2*sigma*np.sqrt(2*np.log(2))
-    return mu, sigma, FWHM
+    fullWidth = 2*sigma*np.sqrt(2*np.log(2))
+    return mu, sigma, fullWidth
