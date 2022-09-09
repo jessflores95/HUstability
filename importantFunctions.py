@@ -85,10 +85,10 @@ def meanROIvalue(ROI_dict, img_dict, num_slice=None):
         ROI_dict['all_HU'][i] = HU_val
     return 
     
-    def coeff_var(mu, sigma):
-      return (sigma/mu)*100
+def coeff_var(mu, sigma):
+    return (sigma/mu)*100
       
-   def fit_gauss(data_list):
+def fit_gauss(data_list):
     (mu, sigma) = norm.fit(data_list)
     FWHM = 2*sigma*np.sqrt(2*np.log(2))
     return mu, sigma, FWHM
