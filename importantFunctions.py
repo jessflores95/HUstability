@@ -57,17 +57,7 @@ def createCircularMask(img, center, radius):  # create circular mask
     mask = dist_from_center <= radius
     return mask
 
-def cropZ(img_dict, beg, end, num_slice=None):  # save only slices containing rods
-    if num_slice is None:
-        num_slice = 3
-    img_shape = img_dict['img'][beg:end, :, :].shape
-    img_dict['img'] = img_dict['img'][beg:end, :, :][(img_shape[0]//2-num_slice):(img_shape[0]//2+num_slice), :, :]
-    return
-
-def meanROIvalue(ROI_dict, img_dict, num_slice=None):
-    # num_slice : slices from image center
-    if num_slice is None:
-        num_slice = 3
+def meanROIvalue(ROI_dict, img_dict):
     img = img_dict['img']
     img_shape = img.shape
     mask = np.zeros((img_shape[1], img_shape[2]))
@@ -82,13 +72,17 @@ def meanROIvalue(ROI_dict, img_dict, num_slice=None):
         img_avg = np.mean(img_pm, axis = 0, dtype=np.float64)
         ROI_dict['mean'][i] = np.mean(HU_val, dtype=np.float64)
         ROI_dict['std'][i] = np.std(HU_val, dtype=np.float64) 
-        ROI_dict['all_HU'][i] = HU_val
     return 
     
 def coeff_var(mu, sigma):
     return (sigma/mu)*100
       
-def fit_gauss(data_list):
-    (mu, sigma) = norm.fit(data_list)
+def fit_gauss(data):
+    (mu, sigma) = norm.fit(data)
     fullWidth = 2*sigma*np.sqrt(2*np.log(2))
     return mu, sigma, fullWidth
+
+def conf_interval(data):
+    confidence = 0.95
+    values = [np.random.choice(data,size=len(data),replace=True).mean() for i in range(1000)] 
+    CI = np.percentile(values,[100*(1-confidence)/2,100*(1-(1-confidence)/2)]) 
